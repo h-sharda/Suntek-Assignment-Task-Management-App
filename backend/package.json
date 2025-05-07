@@ -1,7 +1,7 @@
 {
-  "name": "suntek-assignment-task-management",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "Assignment to create a full-stack app that enables task-and-time tracking",
+  "description": "Assignment to create a full-stack app that enables task and time tracking",
   "keywords": [
     "Task-Management",
     "Time-Tracking",
@@ -20,15 +20,15 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "dev": "cd frontend && npm run build && cd .. && nodemon server.js",
-    "start": "cd frontend && npm run build && cd .. && node server.js"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.10"
+    "test": "cd .. && cd frontend && npm run build && cd .. && cd backend && nodemon server.js",
+    "start": "node server.js"
   },
   "dependencies": {
     "express": "^5.1.0",
     "path": "^0.12.7",
     "url": "^0.11.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
