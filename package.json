@@ -1,0 +1,34 @@
+{
+  "name": "suntek-assignment-task-management",
+  "version": "1.0.0",
+  "description": "Assignment to create a full-stack app that enables task-and-time tracking",
+  "keywords": [
+    "Task-Management",
+    "Time-Tracking",
+    "Productivity"
+  ],
+  "homepage": "https://github.com/h-sharda/Suntek-Assignment-Task-Management-App#readme",
+  "bugs": {
+    "url": "https://github.com/h-sharda/Suntek-Assignment-Task-Management-App/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h-sharda/Suntek-Assignment-Task-Management-App.git"
+  },
+  "license": "ISC",
+  "author": "vector",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "cd frontend && npm run build && cd .. && nodemon server.js",
+    "start": "cd frontend && npm run build && cd .. && node server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "path": "^0.12.7",
+    "url": "^0.11.4"
+  }
+}
