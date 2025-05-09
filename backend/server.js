@@ -1,19 +1,53 @@
-import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const dotenv = require("dotenv");
 
+// Load environment variables
+dotenv.config();
+
+// Import routes
+const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/user");
+
+// Import DB config
+const connectDB = require("./configs/db");
+
+// Create Express app
 const app = express();
-const PORT = 3000;
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Serve static files from the client/dist directory
+// Connect to MongoDB
+connectDB();
+
+// Middleware
+app.use(express.json());
+app.use(cookieParser());
+
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+
+// Serve static files from the React app
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-// Serve index.html on GET /
-app.get("/", (req, res) => {
+// Rerouting all routes to the react frontend
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    success: false,
+    message: "Something went wrong!",
+    error: process.env.NODE_ENV === "development" ? err.message : undefined,
+  });
+});
+
+// Start server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
