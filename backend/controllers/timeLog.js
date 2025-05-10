@@ -43,20 +43,6 @@ exports.startTimeTracking = async (req, res) => {
       });
     }
 
-    // Check if there's any active time log for any task
-    const anyActiveTimeLog = await TimeLog.findOne({
-      user: req.user.id,
-      endTime: null,
-      isActive: true,
-    });
-
-    if (anyActiveTimeLog) {
-      // Stop the active time log
-      anyActiveTimeLog.endTime = new Date();
-      anyActiveTimeLog.isActive = false;
-      await anyActiveTimeLog.save();
-    }
-
     // Create a new time log
     const now = new Date();
     const timeLog = await TimeLog.create({
@@ -319,13 +305,13 @@ exports.getTaskTimeLogs = async (req, res) => {
 };
 
 /**
- * @desc    Get active time log for a user
+ * @desc    Get active time logs for a user
  * @route   GET /api/time-logs/active
  * @access  Private
  */
 exports.getActiveTimeLog = async (req, res) => {
   try {
-    const activeTimeLog = await TimeLog.findOne({
+    const activeTimeLogs = await TimeLog.find({
       user: req.user.id,
       endTime: null,
       isActive: true,
@@ -333,7 +319,7 @@ exports.getActiveTimeLog = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: activeTimeLog || null,
+      data: activeTimeLogs,
     });
   } catch (error) {
     res.status(400).json({
@@ -372,53 +358,66 @@ const updateDailySummary = async (timeLog) => {
       });
     }
 
-    // Get task status
-    const task = await Task.findById(timeLog.task);
+    // Get all tasks for this user on this date
+    const tasks = await Task.find({
+      user: timeLog.user,
+      createdAt: {
+        $gte: new Date(dateStr),
+        $lt: new Date(new Date(dateStr).getTime() + 24 * 60 * 60 * 1000),
+      },
+    });
 
-    // Find if task already exists in summary
-    const taskIndex = dailySummary.tasks.findIndex(
-      (t) => t.task.toString() === timeLog.task.toString()
-    );
+    // Reset task counts
+    dailySummary.completedTasks = 0;
+    dailySummary.inProgressTasks = 0;
+    dailySummary.pendingTasks = 0;
 
-    if (taskIndex !== -1) {
-      // Update existing task
-      dailySummary.tasks[taskIndex].timeSpent += timeLog.duration || 0;
-      dailySummary.tasks[taskIndex].status = task ? task.status : "Unknown";
-    } else {
-      // Add new task
-      dailySummary.tasks.push({
-        task: timeLog.task,
-        timeSpent: timeLog.duration || 0,
-        status: task ? task.status : "Unknown",
-      });
-    }
-
-    // Update total time spent
-    dailySummary.totalTimeSpent += timeLog.duration || 0;
-
-    // Update task counts
-    if (task) {
-      // Reset counts
-      dailySummary.completedTasks = 0;
-      dailySummary.inProgressTasks = 0;
-      dailySummary.pendingTasks = 0;
-
-      // Count tasks by status
-      for (const taskItem of dailySummary.tasks) {
-        const taskStatus = taskItem.status;
-        if (taskStatus === "Completed") {
-          dailySummary.completedTasks += 1;
-        } else if (taskStatus === "In Progress") {
-          dailySummary.inProgressTasks += 1;
-        } else if (taskStatus === "Pending") {
-          dailySummary.pendingTasks += 1;
-        }
+    // Update task counts based on current status
+    tasks.forEach((task) => {
+      if (task.status === "Completed") {
+        dailySummary.completedTasks++;
+      } else if (task.status === "In Progress") {
+        dailySummary.inProgressTasks++;
+      } else {
+        dailySummary.pendingTasks++;
       }
-    }
+    });
+
+    // Get all time logs for this date
+    const timeLogs = await TimeLog.find({
+      user: timeLog.user,
+      date: {
+        $gte: new Date(dateStr),
+        $lt: new Date(new Date(dateStr).getTime() + 24 * 60 * 60 * 1000),
+      },
+    }).populate("task");
+
+    // Reset tasks array and total time
+    dailySummary.tasks = [];
+    dailySummary.totalTimeSpent = 0;
+
+    // Group time logs by task and calculate total time
+    const taskTimeMap = new Map();
+    timeLogs.forEach((log) => {
+      const taskId = log.task._id.toString();
+      const duration = log.duration || 0;
+
+      if (taskTimeMap.has(taskId)) {
+        taskTimeMap.get(taskId).timeSpent += duration;
+      } else {
+        taskTimeMap.set(taskId, {
+          task: log.task._id,
+          timeSpent: duration,
+          status: log.task.status,
+        });
+      }
+      dailySummary.totalTimeSpent += duration;
+    });
+
+    // Update tasks array with latest data
+    dailySummary.tasks = Array.from(taskTimeMap.values());
 
     await dailySummary.save();
-
-    return dailySummary;
   } catch (error) {
     console.error("Error updating daily summary:", error);
     throw error;

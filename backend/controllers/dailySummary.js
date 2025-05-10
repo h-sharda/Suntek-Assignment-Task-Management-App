@@ -31,6 +31,17 @@ exports.getDailySummaries = async (req, res) => {
         select: "title status priority",
       });
 
+    // Update task statuses to ensure they're current
+    for (const summary of dailySummaries) {
+      for (let i = 0; i < summary.tasks.length; i++) {
+        const task = await Task.findById(summary.tasks[i].task._id);
+        if (task) {
+          summary.tasks[i].status = task.status;
+        }
+      }
+      await summary.save();
+    }
+
     res.status(200).json({
       success: true,
       count: dailySummaries.length,
@@ -70,6 +81,15 @@ exports.getDailySummary = async (req, res) => {
         message: "Not authorized to access this daily summary",
       });
     }
+
+    // Update task statuses to ensure they're current
+    for (let i = 0; i < dailySummary.tasks.length; i++) {
+      const task = await Task.findById(dailySummary.tasks[i].task._id);
+      if (task) {
+        dailySummary.tasks[i].status = task.status;
+      }
+    }
+    await dailySummary.save();
 
     res.status(200).json({
       success: true,
@@ -132,11 +152,11 @@ exports.getDailySummaryByDate = async (req, res) => {
 };
 
 /**
- * @desc    Generate AI summary for a daily summary
+ * @desc    Generate summary for a daily summary
  * @route   POST /api/daily-summaries/:id/generate-summary
  * @access  Private
  */
-exports.generateAISummary = async (req, res) => {
+exports.generateSummary = async (req, res) => {
   try {
     const dailySummary = await DailySummary.findById(req.params.id).populate({
       path: "tasks.task",
@@ -158,7 +178,7 @@ exports.generateAISummary = async (req, res) => {
       });
     }
 
-    // Generate AI summary
+    // Generate summary
     const aiResult = await aiService.generateDailySummary({
       completedTasks: dailySummary.completedTasks,
       inProgressTasks: dailySummary.inProgressTasks,
@@ -175,6 +195,88 @@ exports.generateAISummary = async (req, res) => {
       success: true,
       data: dailySummary,
       aiMessage: aiResult.message,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Generate daily summary for a specific date
+ * @route   POST /api/daily-summaries/generate
+ * @access  Private
+ */
+exports.generateDailySummary = async (req, res) => {
+  try {
+    const { date } = req.body;
+    const userId = req.user.id;
+
+    // Get all time logs for the user on the specified date
+    const timeLogs = await TimeLog.find({
+      user: userId,
+      date: date,
+    }).populate("task");
+
+    // Calculate total time spent
+    const totalTimeSpent = timeLogs.reduce((total, log) => {
+      return total + (log.duration || 0);
+    }, 0);
+
+    // Get all tasks for the user created on this date
+    const tasks = await Task.find({
+      user: userId,
+      createdAt: {
+        $gte: new Date(date),
+        $lt: new Date(new Date(date).setDate(new Date(date).getDate() + 1)),
+      },
+    });
+
+    // Count tasks by status
+    const taskCounts = {
+      completed: 0,
+      inProgress: 0,
+      pending: 0,
+    };
+
+    tasks.forEach((task) => {
+      if (task.status === "Completed") {
+        taskCounts.completed++;
+      } else if (task.status === "In Progress") {
+        taskCounts.inProgress++;
+      } else {
+        taskCounts.pending++;
+      }
+    });
+
+    // Create or update daily summary
+    let dailySummary = await DailySummary.findOne({
+      user: userId,
+      date: date,
+    });
+
+    if (dailySummary) {
+      dailySummary.totalTimeSpent = totalTimeSpent;
+      dailySummary.completedTasks = taskCounts.completed;
+      dailySummary.inProgressTasks = taskCounts.inProgress;
+      dailySummary.pendingTasks = taskCounts.pending;
+      await dailySummary.save();
+    } else {
+      dailySummary = await DailySummary.create({
+        user: userId,
+        date: date,
+        totalTimeSpent,
+        completedTasks: taskCounts.completed,
+        inProgressTasks: taskCounts.inProgress,
+        pendingTasks: taskCounts.pending,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: dailySummary,
     });
   } catch (error) {
     res.status(400).json({
@@ -229,7 +331,16 @@ const generateDailySummary = async (userId, date) => {
     let inProgressTasks = 0;
     let pendingTasks = 0;
 
-    const tasks = Array.from(taskMap.values());
+    // Get all tasks for this user
+    const tasks = await Task.find({
+      user: userId,
+      createdAt: {
+        $gte: startDate,
+        $lt: endDate,
+      },
+    });
+
+    // Count tasks by their current status
     for (const task of tasks) {
       if (task.status === "Completed") {
         completedTasks += 1;
@@ -244,7 +355,7 @@ const generateDailySummary = async (userId, date) => {
     const dailySummary = await DailySummary.create({
       date: startDate,
       user: userId,
-      tasks,
+      tasks: Array.from(taskMap.values()),
       totalTimeSpent,
       completedTasks,
       inProgressTasks,
@@ -257,22 +368,6 @@ const generateDailySummary = async (userId, date) => {
       { $push: { dailySummaries: dailySummary._id } },
       { new: true }
     );
-
-    // Generate AI summary
-    try {
-      const aiResult = await aiService.generateDailySummary({
-        completedTasks,
-        inProgressTasks,
-        pendingTasks,
-        totalTimeSpent,
-        tasks,
-      });
-
-      dailySummary.summary = aiResult.summary;
-      await dailySummary.save();
-    } catch (error) {
-      console.error("Error generating AI summary:", error);
-    }
 
     return dailySummary;
   } catch (error) {

@@ -4,7 +4,7 @@ const {
   getDailySummaries,
   getDailySummary,
   getDailySummaryByDate,
-  generateAISummary,
+  generateSummary,
 } = require("../controllers/dailySummary");
 const { protect } = require("../middlewares/auth");
 
@@ -12,6 +12,6 @@ const { protect } = require("../middlewares/auth");
 router.get("/", protect, getDailySummaries);
 router.get("/date/:date", protect, getDailySummaryByDate);
 router.get("/:id", protect, getDailySummary);
-router.post("/:id/generate-summary", protect, generateAISummary);
+router.post("/:id/generate-summary", protect, generateSummary);
 
 module.exports = router;

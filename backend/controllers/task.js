@@ -372,6 +372,32 @@ exports.deleteTask = async (req, res) => {
   }
 };
 
+// Helper function to update daily summaries when task status changes
+const updateDailySummariesForTask = async (taskId, userId) => {
+  try {
+    const task = await Task.findById(taskId);
+    if (!task) return;
+
+    // Get all daily summaries that contain this task
+    const dailySummaries = await DailySummary.find({
+      user: userId,
+      "tasks.task": taskId,
+    });
+
+    // Update each daily summary
+    for (const summary of dailySummaries) {
+      // Update task status in the tasks array
+      const taskItem = summary.tasks.find((t) => t.task.toString() === taskId);
+      if (taskItem) {
+        taskItem.status = task.status;
+      }
+      await summary.save(); // This will trigger the pre-save middleware to update counts
+    }
+  } catch (error) {
+    console.error("Error updating daily summaries for task:", error);
+  }
+};
+
 /**
  * @desc    Update task status
  * @route   PATCH /api/tasks/:id/status
@@ -380,15 +406,7 @@ exports.deleteTask = async (req, res) => {
 exports.updateTaskStatus = async (req, res) => {
   try {
     const { status } = req.body;
-
-    if (!status) {
-      return res.status(400).json({
-        success: false,
-        message: "Please provide a status",
-      });
-    }
-
-    let task = await Task.findById(req.params.id);
+    const task = await Task.findById(req.params.id);
 
     if (!task) {
       return res.status(404).json({
@@ -397,7 +415,6 @@ exports.updateTaskStatus = async (req, res) => {
       });
     }
 
-    // Check if task belongs to user
     if (task.user.toString() !== req.user.id) {
       return res.status(401).json({
         success: false,
@@ -405,26 +422,16 @@ exports.updateTaskStatus = async (req, res) => {
       });
     }
 
-    // Add to status history
+    task.status = status;
     task.statusHistory.push({
       status,
       changedAt: new Date(),
     });
 
-    // Update status
-    task = await Task.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: { status },
-        $push: {
-          statusHistory: {
-            status,
-            changedAt: new Date(),
-          },
-        },
-      },
-      { new: true }
-    );
+    await task.save();
+
+    // Update daily summaries
+    await updateDailySummariesForTask(task._id, req.user.id);
 
     res.status(200).json({
       success: true,
