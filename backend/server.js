@@ -10,6 +10,9 @@ dotenv.config();
 // Import routes
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
+const taskRoutes = require("./routes/task");
+const timeLogRoutes = require("./routes/timeLog");
+const dailySummaryRoutes = require("./routes/dailySummary");
 
 // Import DB config
 const connectDB = require("./configs/db");
@@ -23,10 +26,17 @@ connectDB();
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' ? false : 'http://localhost:5173',
+  credentials: true
+}));
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/time-logs", timeLogRoutes);
+app.use("/api/daily-summaries", dailySummaryRoutes);
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "../frontend/dist")));

@@ -47,6 +47,18 @@ const UserSchema = new mongoose.Schema({
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
+  tasks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Task",
+    },
+  ],
+  dailySummaries: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "DailySummary",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

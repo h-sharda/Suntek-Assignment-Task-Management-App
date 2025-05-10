@@ -1,7 +1,9 @@
 const User = require("../models/User");
 const otpService = require("../services/otpService");
 
-// Helper function to send token response
+/**
+ * Helper function to send token response
+ */
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
 
@@ -19,9 +21,11 @@ const sendTokenResponse = (user, statusCode, res) => {
   });
 };
 
-// @desc    Sign up user
-// @route   POST /api/auth/signup
-// @access  Public
+/**
+ * @desc    Sign up user
+ * @route   POST /api/auth/signup
+ * @access  Public
+ */
 exports.signup = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -56,9 +60,11 @@ exports.signup = async (req, res, next) => {
   }
 };
 
-// @desc    Skip email verification
-// @route   POST /api/auth/skip-verification
-// @access  Public
+/**
+ * @desc    Skip email verification
+ * @route   POST /api/auth/skip-verification
+ * @access  Public
+ */
 exports.skipVerification = async (req, res, next) => {
   try {
     const { userId } = req.body;
@@ -86,9 +92,11 @@ exports.skipVerification = async (req, res, next) => {
   }
 };
 
-// @desc    Verify email with OTP
-// @route   POST /api/auth/verify-email
-// @access  Public
+/**
+ * @desc    Verify email with OTP
+ * @route   POST /api/auth/verify-email
+ * @access  Public
+ */
 exports.verifyEmail = async (req, res, next) => {
   try {
     const { userId, otp } = req.body;
@@ -113,9 +121,11 @@ exports.verifyEmail = async (req, res, next) => {
   }
 };
 
-// @desc    Resend OTP
-// @route   POST /api/auth/resend-otp
-// @access  Public
+/**
+ * @desc    Resend OTP
+ * @route   POST /api/auth/resend-otp
+ * @access  Public
+ */
 exports.resendOTP = async (req, res, next) => {
   try {
     const { userId, email } = req.body;
@@ -156,9 +166,11 @@ exports.resendOTP = async (req, res, next) => {
   }
 };
 
-// @desc    Sign in user
-// @route   POST /api/auth/signin
-// @access  Public
+/**
+ * @desc    Sign in user
+ * @route   POST /api/auth/signin
+ * @access  Public
+ */
 exports.signin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -198,9 +210,11 @@ exports.signin = async (req, res, next) => {
   }
 };
 
-// @desc    Sign out user / clear cookie
-// @route   GET /api/auth/signout
-// @access  Private
+/**
+ * @desc    Sign out user / clear cookie
+ * @route   GET /api/auth/signout
+ * @access  Private
+ */
 exports.signout = (req, res, next) => {
   res.cookie("token", "none", {
     expires: new Date(Date.now() + 10 * 1000),
@@ -213,9 +227,11 @@ exports.signout = (req, res, next) => {
   });
 };
 
-// @desc    Get current signed in user
-// @route   GET /api/auth/me
-// @access  Private
+/**
+ * @desc    Get current signed in user
+ * @route   GET /api/auth/me
+ * @access  Private
+ */
 exports.getMe = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
@@ -229,9 +245,11 @@ exports.getMe = async (req, res, next) => {
   }
 };
 
-// @desc    Forgot password
-// @route   POST /api/auth/forgot-password
-// @access  Public
+/**
+ * @desc    Forgot password
+ * @route   POST /api/auth/forgot-password
+ * @access  Public
+ */
 exports.forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -258,9 +276,11 @@ exports.forgotPassword = async (req, res, next) => {
   }
 };
 
-// @desc    Reset password
-// @route   PUT /api/auth/reset-password
-// @access  Public
+/**
+ * @desc    Reset password
+ * @route   PUT /api/auth/reset-password
+ * @access  Public
+ */
 exports.resetPassword = async (req, res, next) => {
   try {
     const { userId, otp, password } = req.body;

@@ -1,9 +1,11 @@
 const User = require("../models/User");
 const otpService = require("../services/otpService");
 
-// @desc    Update user details
-// @route   PUT /api/users/update-details
-// @access  Private
+/**
+ * @desc    Update user details
+ * @route   PUT /api/users/update-details
+ * @access  Private
+ */
 exports.updateDetails = async (req, res, next) => {
   try {
     const { name } = req.body;
@@ -26,9 +28,11 @@ exports.updateDetails = async (req, res, next) => {
   }
 };
 
-// @desc    Update user email
-// @route   POST /api/users/update-email
-// @access  Private
+/**
+ * @desc    Update user email
+ * @route   POST /api/users/update-email
+ * @access  Private
+ */
 exports.updateEmail = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -59,14 +63,15 @@ exports.updateEmail = async (req, res, next) => {
       userId: user._id,
     });
   } catch (error) {
-    if (error )
-    next(error);
+    if (error) next(error);
   }
 };
 
-// @desc    Update password
-// @route   PUT /api/users/update-password
-// @access  Private
+/**
+ * @desc    Update password
+ * @route   PUT /api/users/update-password
+ * @access  Private
+ */
 exports.updatePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
