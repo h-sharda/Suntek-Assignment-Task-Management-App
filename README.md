@@ -21,37 +21,51 @@ A full-stack application for managing tasks and tracking time, built as part of 
 ## Features
 
 ### Authentication
+
 - Secure user registration and login
 - Protected routes and data isolation
 - JWT-based authentication
 
+> See screenshots: [Sign In](#authentication-1), [Sign Up](#authentication-1), [Email Verification](#authentication-1)
+
 ### Task Management
+
 - Create tasks with natural language input
 - AI-powered task title and description generation
 - View, edit, and delete tasks
 - Task status management (Pending, In Progress, Completed)
 
+> See screenshots: [Home Page](#task-management-1), [Manual Task Creation](#task-management-1), [AI Task Creation](#task-management-1)
+
 ### Time Tracking
+
 - Real-time timer for tasks
 - Start/Stop functionality
 - Session-based time logging
 - Total time tracking per task
 
-### Daily Summary
+> See screenshot: [Task Menu](#time-tracking-1)
+
+## Daily Summary
+
 - Overview of daily tasks
 - Total time tracked
 - Task completion status
 - Progress tracking
 
+> See screenshots: [Dashboard](#daily-summary-1), [Daily Summary](#daily-summary-1)
+
 ## Tech Stack
 
 ### Frontend
+
 - React.js
 - Tailwind CSS
 - Vite
 - Axios for API calls
 
 ### Backend
+
 - Node.js
 - Express.js
 - MongoDB
@@ -60,36 +74,41 @@ A full-stack application for managing tasks and tracking time, built as part of 
 ## Local Development Setup
 
 1. Clone the repository
-```bash
-git clone https://github.com/h-sharda/Suntek-Assignment-Task-Management-App.git
-```
+
+    ```bash
+    git clone https://github.com/h-sharda/Suntek-Assignment-Task-Management-App.git
+    ```
 
 2. Install dependencies and build React App
-```bash
-# Install 
-cd backend
-npm run build
-```
+
+    ```bash
+    # Install 
+    cd backend
+    npm run build
+    ```
 
 3. Set up environment variables
-```bash
-# In backend directory
-cp .env.example .env
-# Fill in the required environment variables
-```
+
+    ```bash
+    # In backend directory
+    cp .env.example .env
+    # Fill in the required environment variables
+    ```
 
 4. Start the servers (from **/backend** )
-```bash
-# Start development server 
-npm run dev
 
-# Start main server 
-npm start
-```
+    ```bash
+    # Start development server 
+    npm run dev
+
+    # Start main server 
+    npm start
+    ```
 
 ## Deployment
 
 The application is deployed on Render.com with the following components:
+
 - Frontend: Static site hosting
 - Backend: Web service
 - Database: MongoDB Atlas
@@ -111,3 +130,47 @@ CSS color pallette to match the pallette of company's website:
 - blue color: #2d3ec5
 - primary black text: #010001
 - secondary gray text: #323233
+
+## Screenshots
+
+### Authentication
+<div align="center">
+  <img src="images/Sign-In.png" alt="Sign In" width="200"/>
+  <img src="images/Sign-Up.png" alt="Sign Up" width="200"/>
+  <img src="images/Verify-Email.png" alt="Verify Email" width="200"/>
+</div>
+
+### Task Management
+<div align="center">
+  <img src="images/Home.png" alt="Home Page" width="400"/>
+</div>
+
+<div align="center">
+  <img src="images/Manual-Task-Prompt.png" alt="Manual Task Prompt" width="400"/>
+</div>
+
+<div align="center">
+  <img src="images/Manual-Task-Output.png" alt="Manual Task Output" width="400"/>
+</div>
+
+<div align="center">
+  <img src="images/AI-Task-Prompt.png" alt="AI Task Prompt" width="400"/>
+</div>
+
+<div align="center">
+  <img src="images/AI-Task-Output.png" alt="AI Task Output" width="400"/>
+</div>
+
+### Time Tracking
+<div align="center">
+  <img src="images/Task-Menu.png" alt="Task Menu" width="400"/>
+</div>
+
+### Daily Summary
+<div align="center">
+  <img src="images/Dashboard.png" alt="Dashboard" width="400"/>
+</div>
+
+<div align="center">
+  <img src="images/Daily-Summary.png" alt="Daily Summary" width="400"/>
+</div>
