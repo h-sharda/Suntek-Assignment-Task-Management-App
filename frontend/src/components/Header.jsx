@@ -47,9 +47,14 @@ const Header = () => {
             {isAuthenticated ? (
               <>
                 <li>
-                  <button className="bg-button hover:bg-white hover:text-button border border-button text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                  <Link to="/" className="bg-white text-button border border-button hover:bg-button hover:text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/dashboard" className="bg-white text-button border border-button hover:bg-button hover:text-white font-bold py-2 px-4 rounded transition-colors duration-200">
                     Dashboard
-                  </button>
+                  </Link>
                 </li>
                 <li className="relative">
                   <button 

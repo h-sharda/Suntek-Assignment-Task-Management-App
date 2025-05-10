@@ -20,9 +20,13 @@ import SignIn from "./pages/SignIn";
 import Profile from "./pages/Profile";
 import ForgotPassword from "./pages/ForgotPassword";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
+import TaskDetails from "./pages/TaskDetails";
+import DailySummaryDetails from "./pages/DailySummaryDetails";
 
 // Context
 import { AuthProvider } from "./context/AuthContext";
+import { TaskProvider } from "./context/TaskContext";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -80,55 +84,88 @@ function App() {
     <AuthProvider
       value={{ isAuthenticated, setIsAuthenticated, user, setUser, loading }}
     >
-      <Router>
-        <div className="flex flex-col min-h-screen bg-bg-white">
-          <div className="max-w-[85vw] mx-auto w-full flex flex-col flex-grow">
-            <Header />
-            <main className="flex-grow px-4 py-8">
-              {!loading && (
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route
-                    path="/signup"
-                    element={
-                      <PublicRoute>
-                        <SignUp />
-                      </PublicRoute>
-                    }
-                  />
-                  <Route
-                    path="/signin"
-                    element={
-                      <PublicRoute>
-                        <SignIn />
-                      </PublicRoute>
-                    }
-                  />
-                  <Route
-                    path="/forgot-password"
-                    element={
-                      <PublicRoute>
-                        <ForgotPassword />
-                      </PublicRoute>
-                    }
-                  />
-                  <Route
-                    path="/profile"
-                    element={
-                      <ProtectedRoute>
-                        <Profile />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              )}
-            </main>
-            <Footer />
+      <TaskProvider>
+        <Router>
+          <div className="flex flex-col min-h-screen bg-bg-white">
+            <div className="max-w-[85vw] mx-auto w-full flex flex-col flex-grow">
+              <Header />
+              <main className="flex-grow px-4 py-8">
+                {!loading && (
+                  <Routes>
+                    <Route 
+                      path="/" 
+                      element={
+                        <ProtectedRoute>
+                          <Home />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route
+                      path="/signup"
+                      element={
+                        <PublicRoute>
+                          <SignUp />
+                        </PublicRoute>
+                      }
+                    />
+                    <Route
+                      path="/signin"
+                      element={
+                        <PublicRoute>
+                          <SignIn />
+                        </PublicRoute>
+                      }
+                    />
+                    <Route
+                      path="/forgot-password"
+                      element={
+                        <PublicRoute>
+                          <ForgotPassword />
+                        </PublicRoute>
+                      }
+                    />
+                    <Route
+                      path="/profile"
+                      element={
+                        <ProtectedRoute>
+                          <Profile />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/dashboard"
+                      element={
+                        <ProtectedRoute>
+                          <Dashboard />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/tasks/:id"
+                      element={
+                        <ProtectedRoute>
+                          <TaskDetails />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/daily-summaries/:id"
+                      element={
+                        <ProtectedRoute>
+                          <DailySummaryDetails />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                )}
+              </main>
+              <Footer />
+            </div>
           </div>
-        </div>
-        <ToastContainer position="top-right" autoClose={3000} />
-      </Router>
+          <ToastContainer position="top-right" autoClose={3000} />
+        </Router>
+      </TaskProvider>
     </AuthProvider>
   );
 }

@@ -1,74 +1,72 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useTask } from '../context/TaskContext';
+import TaskForm from '../components/TaskForm';
+import TaskCard from '../components/TaskCard';
 
 const Home = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { user } = useAuth();
+  const { ongoingTasks, loading, fetchOngoingTasks } = useTask();
+  const [showForm, setShowForm] = useState(true);
+
+  const toggleForm = () => {
+    setShowForm(!showForm);
+  };
 
   return (
-    <div className="max-w-3xl mx-auto text-center">
-      <h1 className="text-4xl font-bold mb-8 text-text-primary">Task and Time Tracking App</h1>
-      
-      {isAuthenticated ? (
-        <div>
-          <h2 className="text-2xl mb-4 text-text-primary">Hello, {user?.name}!</h2>
-          <p className="text-lg mb-6 text-text-secondary">
-            {/* main content */}
-          </p>
-          <div className="flex justify-center space-x-4">
-            <Link 
-              to="/profile" 
-              className="bg-button hover:bg-white hover:text-button border border-button text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200"
-            >
-              Go to Profile
-            </Link>
-            <button className="bg-button hover:bg-white hover:text-button border border-button text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200">
-              Dashboard
-            </button>
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Welcome, {user?.name || 'User'}</h1>
+        <button
+          onClick={toggleForm}
+          className="bg-button hover:bg-button-hover text-white px-4 py-2 rounded-md flex items-center gap-2"
+        >
+          {showForm ? (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              Hide Form
+            </>
+          ) : (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Add Task
+            </>
+          )}
+        </button>
+      </div>
+
+      {showForm && <TaskForm onSuccess={() => fetchOngoingTasks()} />}
+
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Ongoing Tasks</h2>
+        
+        {loading ? (
+          <div className="flex justify-center items-center py-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-button"></div>
           </div>
-        </div>
-      ) : (
-        <div>
-          <p className="text-lg mb-6 text-text-secondary">
-            Welcome to the Task and Time Tracking App. This app is designed to help you manage your tasks and time effectively. 
-            You can use this app to create tasks, assign them to others, track time spent on tasks, and daily summaries.
-          </p>
-          <p className="mb-8 text-text-secondary">
-            Sign up or sign in to get started.
-          </p>
-          <div className="flex justify-center space-x-4">
-            <Link 
-              to="/signup" 
-              className="bg-button hover:bg-white hover:text-button border border-button text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200"
-            >
-              Sign Up
-            </Link>
-            <Link 
-              to="/signin" 
-              className="bg-white text-button border border-button hover:bg-button hover:text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200"
-            >
-              Sign In
-            </Link>
+        ) : ongoingTasks.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4">
+            {ongoingTasks.map((task) => (
+              <TaskCard key={task._id} task={task} />
+            ))}
           </div>
-        </div>
-      )}
-      
-      <div className="mt-16">
-        <h3 className="text-xl font-semibold mb-4 text-text-primary">Features</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-overlay-white p-6 rounded-lg shadow-md">
-            <h4 className="text-lg font-semibold mb-2 text-text-primary">Task Management</h4>
-            <p className="text-text-secondary">Create, assign, and track tasks efficiently for yourself or your team.</p>
+        ) : (
+          <div className="bg-gray-50 rounded-lg p-8 text-center">
+            <p className="text-gray-500 mb-4">No ongoing tasks. Create a new task to get started!</p>
+            {!showForm && (
+              <button
+                onClick={toggleForm}
+                className="bg-button hover:bg-button-hover text-white px-4 py-2 rounded-md"
+              >
+                Create Task
+              </button>
+            )}
           </div>
-          <div className="bg-overlay-white p-6 rounded-lg shadow-md">
-            <h4 className="text-lg font-semibold mb-2 text-text-primary">Time Tracking</h4>
-            <p className="text-text-secondary">Log your work hours, monitor productivity, and generate insightful reports.</p>
-          </div>
-          <div className="bg-overlay-white p-6 rounded-lg shadow-md">
-            <h4 className="text-lg font-semibold mb-2 text-text-primary">Daily Summaries</h4>
-            <p className="text-text-secondary">Get a daily summary of your tasks and time spent.</p>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
