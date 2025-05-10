@@ -10,7 +10,7 @@ const sendEmail = async (options) => {
   });
 
   const mailOptions = {
-    from: process.env.EMAIL_USERNAME,
+    from: process.env.EMAIL_OTP_SENDER,
     to: options.to,
     subject: options.subject,
     html: options.text,
