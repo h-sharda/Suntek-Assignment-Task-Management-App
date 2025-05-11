@@ -20,7 +20,6 @@
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
     "start": "node server.js",
     "dev": "cd frontend && npm run build && cd .. && nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
