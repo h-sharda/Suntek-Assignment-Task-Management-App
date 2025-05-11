@@ -14,9 +14,10 @@ A full-stack application for managing tasks and tracking time, built as part of 
 | UI/UX | ✅ Complete | - Clean, responsive design<br>- User-friendly interface<br>- Matches Suntek AI branding |
 | Code Quality | ✅ Complete | - Modular, readable code<br>- Structured project layout<br>- Proper documentation |
 
-## Live Demo
+## Live Deployment 🌐
 
-🌐 [Live Application](https://task-management-app-io6h.onrender.com/signin)
+Primary: [Vercel](https://task-tracker-101.vercel.app/signin)
+Other: [Render](https://task-management-app-io6h.onrender.com/signin)
 
 ## Features
 
