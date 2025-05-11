@@ -16,8 +16,8 @@ A full-stack application for managing tasks and tracking time, built as part of 
 
 ## Live Deployment 🌐
 
-Primary: [Vercel](https://task-tracker-101.vercel.app/signin)
-Other: [Render](https://task-management-app-io6h.onrender.com/signin)
+Primary: [Vercel](https://task-tracker-101.vercel.app)
+Other: [Render](https://task-tracker-101.onrender.com)
 
 ## Features
 
@@ -135,6 +135,7 @@ CSS color pallette to match the pallette of company's website:
 ## Screenshots
 
 ### Authentication
+
 <div align="center">
   <img src="images/Sign-In.png" alt="Sign In" width="200"/>
   <img src="images/Sign-Up.png" alt="Sign Up" width="200"/>
@@ -142,6 +143,7 @@ CSS color pallette to match the pallette of company's website:
 </div>
 
 ### Task Management
+
 <div align="center">
   <img src="images/Home.png" alt="Home Page" width="400"/>
 </div>
@@ -163,11 +165,13 @@ CSS color pallette to match the pallette of company's website:
 </div>
 
 ### Time Tracking
+
 <div align="center">
   <img src="images/Task-Menu.png" alt="Task Menu" width="400"/>
 </div>
 
 ### Daily Summary
+
 <div align="center">
   <img src="images/Dashboard.png" alt="Dashboard" width="400"/>
 </div>
