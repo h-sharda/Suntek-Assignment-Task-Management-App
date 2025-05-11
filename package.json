@@ -1,10 +1,42 @@
 {
-    "name": "task-tracker-101",
-    "version": "1.0.0",
-    "main" : "backend/server.js",
-    "scripts": {
-        "build": "cd frontend && npm install && npm run build",
-        "install": "cd backend && npm install",
-        "start": "node backend/server.js"
-    }
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Assignment to create a full-stack app that enables task and time tracking",
+  "keywords": [
+    "Task-Management",
+    "Time-Tracking",
+    "Productivity"
+  ],
+  "homepage": "https://github.com/h-sharda/Suntek-Assignment-Task-Management-App#readme",
+  "bugs": {
+    "url": "https://github.com/h-sharda/Suntek-Assignment-Task-Management-App/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h-sharda/Suntek-Assignment-Task-Management-App.git"
+  },
+  "license": "ISC",
+  "author": "vector",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "start": "node server.js",
+    "dev": "cd frontend && npm run build && cd .. && nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@huggingface/inference": "^3.12.1",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.14.2",
+    "nodemailer": "^7.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
 }
