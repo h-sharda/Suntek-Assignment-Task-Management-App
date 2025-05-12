@@ -56,7 +56,7 @@ const Dashboard = () => {
             id="dateFilter"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-button focus:border-transparent"
+            className="px-3 py-2 bg-button text-white rounded-md focus:outline-none focus:ring-2 focus:ring-button"
           />
           {selectedDate && (
             <button
