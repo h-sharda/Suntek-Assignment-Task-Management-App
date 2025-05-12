@@ -7,8 +7,7 @@ const TaskCard = ({ task }) => {
   const { 
     startTimeTracking, 
     pauseTimeTracking, 
-    updateTaskStatus, 
-    updateTaskPriority, 
+    updateTask, 
     activeTimeLogs 
   } = useTask();
   const navigate = useNavigate();
@@ -16,6 +15,10 @@ const TaskCard = ({ task }) => {
   const [showActions, setShowActions] = useState(false);
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
   const [showPriorityDropdown, setShowPriorityDropdown] = useState(false);
+  const [formData, setFormData] = useState({
+    status: task.status,
+    priority: task.priority
+  });
 
   const isTaskActive = activeTimeLogs.some(log => log.task._id === task._id);
   const activeTimeLog = activeTimeLogs.find(log => log.task._id === task._id);
@@ -38,7 +41,6 @@ const TaskCard = ({ task }) => {
   const handleStartTracking = async () => {
     try {
       await startTimeTracking(task._id);
-      // The state will be updated by the context
     } catch (error) {
       console.error('Error starting tracking:', error);
     }
@@ -48,21 +50,33 @@ const TaskCard = ({ task }) => {
     try {
       if (activeTimeLog) {
         await pauseTimeTracking(activeTimeLog._id);
-        // The state will be updated by the context
       }
     } catch (error) {
       console.error('Error pausing tracking:', error);
     }
   };
 
-  const handleStatusChange = (status) => {
-    updateTaskStatus(task._id, status);
-    setShowStatusDropdown(false);
+  const handleStatusChange = async (status) => {
+    try {
+      const updatedTask = await updateTask(task._id, { ...task, status });
+      setFormData(prev => ({ ...prev, status }));
+      setShowStatusDropdown(false);
+      
+      // If status is completed, the task will be removed from ongoing tasks
+      // by the context's updateTask function
+    } catch (error) {
+      console.error('Error updating task status:', error);
+    }
   };
 
-  const handlePriorityChange = (priority) => {
-    updateTaskPriority(task._id, priority);
-    setShowPriorityDropdown(false);
+  const handlePriorityChange = async (priority) => {
+    try {
+      const updatedTask = await updateTask(task._id, { ...task, priority });
+      setFormData(prev => ({ ...prev, priority }));
+      setShowPriorityDropdown(false);
+    } catch (error) {
+      console.error('Error updating task priority:', error);
+    }
   };
 
   return (
@@ -97,12 +111,12 @@ const TaskCard = ({ task }) => {
           </div>
           
           <div className="flex flex-wrap gap-2 mt-3">
-            <span className={`text-xs px-2 py-1 rounded-full ${statusColors[task.status]}`}>
-              {task.status}
+            <span className={`text-xs px-2 py-1 rounded-full ${statusColors[formData.status]}`}>
+              {formData.status}
             </span>
             
-            <span className={`text-xs px-2 py-1 rounded-full ${priorityColors[task.priority]}`}>
-              {task.priority}
+            <span className={`text-xs px-2 py-1 rounded-full ${priorityColors[formData.priority]}`}>
+              {formData.priority}
             </span>
             
             {task.deadline && (
@@ -121,7 +135,7 @@ const TaskCard = ({ task }) => {
             <button 
               onClick={handleStartTracking}
               className="bg-green-500 hover:bg-green-600 hover:text-white text-white px-3 py-1 rounded text-sm"
-              disabled={task.status === 'Completed' || task.status === 'Cancelled'}
+              disabled={formData.status === 'Completed' || formData.status === 'Cancelled'}
             >
               Start
             </button>
@@ -158,7 +172,7 @@ const TaskCard = ({ task }) => {
                 <button 
                   key={status}
                   onClick={() => handleStatusChange(status)}
-                  className="w-full bg-white text-blue-500 text-left text-xs px-2 py-1"
+                  className="w-full bg-white text-blue-500 text-left text-xs px-2 py-1 hover:bg-gray-100"
                 >
                   {status}
                 </button>
@@ -187,7 +201,7 @@ const TaskCard = ({ task }) => {
                 <button 
                   key={priority}
                   onClick={() => handlePriorityChange(priority)}
-                  className="w-full bg-white text-blue-500 text-left text-xs px-2 py-1"
+                  className="w-full bg-white text-blue-500 text-left text-xs px-2 py-1 hover:bg-gray-100"
                 >
                   {priority}
                 </button>

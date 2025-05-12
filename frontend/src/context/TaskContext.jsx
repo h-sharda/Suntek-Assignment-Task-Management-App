@@ -22,7 +22,7 @@ export const TaskProvider = ({ children }) => {
   const fetchOngoingTasks = async () => {
     try {
       const { data } = await axios.get('/api/tasks/ongoing');
-      setOngoingTasks(data.data);
+      setOngoingTasks(sortTasksByPriority(data.data));
     } catch (error) {
       console.error('Error fetching ongoing tasks:', error);
       toast.error('Failed to fetch ongoing tasks');
@@ -33,7 +33,7 @@ export const TaskProvider = ({ children }) => {
   const fetchTasks = async () => {
     try {
       const { data } = await axios.get('/api/tasks');
-      setTasks(data.data);
+      setTasks(sortTasksByPriority(data.data));
     } catch (error) {
       console.error('Error fetching tasks:', error);
       toast.error('Failed to fetch tasks');
@@ -84,7 +84,7 @@ export const TaskProvider = ({ children }) => {
   const createTask = async (taskData) => {
     try {
       const { data } = await axios.post('/api/tasks', taskData);
-      setTasks([data.data, ...tasks]);
+      setTasks(prevTasks => sortTasksByPriority([data.data, ...prevTasks]));
       fetchOngoingTasks();
       toast.success('Task created successfully');
       return data.data;
@@ -114,16 +114,51 @@ export const TaskProvider = ({ children }) => {
   const updateTask = async (taskId, updates) => {
     try {
       const { data } = await axios.put(`/api/tasks/${taskId}`, updates);
-      setTasks(tasks.map(task => task._id === taskId ? data.data : task));
+      
+      // If status is completed, remove from ongoing tasks
+      if (updates.status === 'Completed') {
+        setOngoingTasks(prevTasks => prevTasks.filter(task => task._id !== taskId));
+      } else {
+        // Update the task in ongoing tasks
+        setOngoingTasks(prevTasks => {
+          const updatedTasks = prevTasks.map(task => 
+            task._id === taskId ? data.data : task
+          );
+          return sortTasksByPriority(updatedTasks);
+        });
+      }
+      
+      // Update in all tasks list
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => 
+          task._id === taskId ? data.data : task
+        );
+        return sortTasksByPriority(updatedTasks);
+      });
+      
       // Refresh daily summaries when a task is updated
       await fetchDailySummaries();
       toast.success('Task updated successfully');
-      return data;
+      return data.data;
     } catch (error) {
       console.error('Error updating task:', error);
       toast.error('Failed to update task');
       throw error;
     }
+  };
+
+  // Sort tasks by priority
+  const sortTasksByPriority = (tasks) => {
+    const priorityOrder = {
+      'Urgent': 0,
+      'High': 1,
+      'Medium': 2,
+      'Low': 3
+    };
+    
+    return [...tasks].sort((a, b) => {
+      return priorityOrder[a.priority] - priorityOrder[b.priority];
+    });
   };
 
   // Delete task
@@ -184,11 +219,28 @@ export const TaskProvider = ({ children }) => {
   const updateTaskPriority = async (taskId, priority) => {
     try {
       const { data } = await axios.put(`/api/tasks/${taskId}/priority`, { priority });
-      setTasks(tasks.map(task => task._id === taskId ? data.data : task));
-      // Refresh daily summaries when task priority changes
-      await fetchDailySummaries();
+      
+      // Update task priority in both lists immediately
+      const updateTaskPriority = (task) => {
+        if (task._id === taskId) {
+          return { ...task, priority };
+        }
+        return task;
+      };
+      
+      setTasks(prevTasks => prevTasks.map(updateTaskPriority));
+      setOngoingTasks(prevTasks => prevTasks.map(updateTaskPriority));
+      
+      // Refresh data in the background
+      Promise.all([
+        fetchOngoingTasks(),
+        fetchDailySummaries()
+      ]).catch(error => {
+        console.error('Error refreshing data:', error);
+      });
+      
       toast.success('Task priority updated');
-      return data;
+      return data.data;
     } catch (error) {
       console.error('Error updating task priority:', error);
       toast.error('Failed to update task priority');
