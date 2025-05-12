@@ -145,7 +145,7 @@ const TaskDetails = () => {
       <div className="flex justify-between items-center mb-6">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center text-gray-600 hover:text-button"
+          className="flex items-center text-white"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -165,13 +165,13 @@ const TaskDetails = () => {
             <>
               <button
                 onClick={() => setIsEditing(true)}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
+                className="bg-blue-500 text-white px-3 py-1 rounded text-sm"
               >
                 Edit
               </button>
               <button
                 onClick={handleDelete}
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                className="bg-red-500 text-white px-3 py-1 rounded text-sm"
               >
                 Delete
               </button>
@@ -333,7 +333,7 @@ const TaskDetails = () => {
               {!isTaskActive ? (
                 <button
                   onClick={handleStartTracking}
-                  className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
+                  className="bg-green-500 hover:bg-green-600 hover:text-white text-white px-3 py-1 rounded text-sm"
                   disabled={task?.status === 'Completed' || task?.status === 'Cancelled'}
                 >
                   Start Tracking
@@ -341,7 +341,7 @@ const TaskDetails = () => {
               ) : (
                 <button
                   onClick={handlePauseTracking}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
+                  className="bg-yellow-500 hover:bg-yellow-600 hover:text-white text-white px-3 py-1 rounded text-sm"
                 >
                   Pause Tracking
                 </button>
