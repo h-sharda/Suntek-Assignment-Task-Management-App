@@ -61,12 +61,6 @@ const TaskForm = ({ onSuccess }) => {
           className="text-sm bg-purple-100 hover:bg-purple-200 text-purple-800 px-3 py-1 rounded-full flex items-center gap-1"
         >
           {isUsingAI ? 'Switch to Manual' : 'Use AI Assistant'}
-          {isUsingAI && (
-            <span className="inline-flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
-            </span>
-          )}
         </button>
       </div>
 
