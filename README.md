@@ -137,45 +137,45 @@ CSS color pallette to match the pallette of company's website:
 ### Authentication
 
 <div align="center">
-  <img src="images/Sign-In.png" alt="Sign In" width="200"/>
-  <img src="images/Sign-Up.png" alt="Sign Up" width="200"/>
-  <img src="images/Verify-Email.png" alt="Verify Email" width="200"/>
+  <img src="README-images/Sign-In.png" alt="Sign In" width="200"/>
+  <img src="README-images/Sign-Up.png" alt="Sign Up" width="200"/>
+  <img src="README-images/Verify-Email.png" alt="Verify Email" width="200"/>
 </div>
 
 ### Task Management
 
 <div align="center">
-  <img src="images/Home.png" alt="Home Page" width="400"/>
+  <img src="README-images/Home.png" alt="Home Page" width="400"/>
 </div>
 
 <div align="center">
-  <img src="images/Manual-Task-Prompt.png" alt="Manual Task Prompt" width="400"/>
+  <img src="README-images/Manual-Task-Prompt.png" alt="Manual Task Prompt" width="400"/>
 </div>
 
 <div align="center">
-  <img src="images/Manual-Task-Output.png" alt="Manual Task Output" width="400"/>
+  <img src="README-images/Manual-Task-Output.png" alt="Manual Task Output" width="400"/>
 </div>
 
 <div align="center">
-  <img src="images/AI-Task-Prompt.png" alt="AI Task Prompt" width="400"/>
+  <img src="README-images/AI-Task-Prompt.png" alt="AI Task Prompt" width="400"/>
 </div>
 
 <div align="center">
-  <img src="images/AI-Task-Output.png" alt="AI Task Output" width="400"/>
+  <img src="README-images/AI-Task-Output.png" alt="AI Task Output" width="400"/>
 </div>
 
 ### Time Tracking
 
 <div align="center">
-  <img src="images/Task-Menu.png" alt="Task Menu" width="400"/>
+  <img src="README-images/Task-Menu.png" alt="Task Menu" width="400"/>
 </div>
 
 ### Daily Summary
 
 <div align="center">
-  <img src="images/Dashboard.png" alt="Dashboard" width="400"/>
+  <img src="README-images/Dashboard.png" alt="Dashboard" width="400"/>
 </div>
 
 <div align="center">
-  <img src="images/Daily-Summary.png" alt="Daily Summary" width="400"/>
+  <img src="README-images/Daily-Summary.png" alt="Daily Summary" width="400"/>
 </div>
