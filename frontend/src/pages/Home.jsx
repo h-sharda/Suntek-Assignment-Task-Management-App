@@ -7,7 +7,7 @@ import TaskCard from '../components/TaskCard';
 const Home = () => {
   const { user } = useAuth();
   const { ongoingTasks, loading, fetchOngoingTasks } = useTask();
-  const [showForm, setShowForm] = useState(true);
+  const [showForm, setShowForm] = useState(false);
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -19,7 +19,7 @@ const Home = () => {
         <h1 className="text-3xl font-bold">Welcome, {user?.name || 'User'}</h1>
         <button
           onClick={toggleForm}
-          className="bg-button hover:bg-button-hover text-white px-4 py-2 rounded-md flex items-center gap-2"
+          className="bg-button text-white px-4 py-2 rounded-md flex items-center gap-2"
         >
           {showForm ? (
             <>

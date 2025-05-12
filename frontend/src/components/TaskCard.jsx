@@ -78,10 +78,20 @@ const TaskCard = ({ task }) => {
     >
       <div className="flex justify-between items-start">
         <div className="flex-1">
-          <Link to={`/tasks/${task._id}`} className="text-lg font-semibold hover:text-button">
-            {task.title}
-          </Link>
-          
+          <div className="flex items-center gap-2">
+            <Link to={`/tasks/${task._id}`} className="text-lg font-semibold hover:text-button">
+              {task.title}
+            </Link>
+            
+            {/* Active timer indicator */}
+            {isTaskActive && (
+              <div className="flex items-center text-sm text-green-600">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></div>
+                Active
+              </div>
+            )}
+          </div>
+
           <div className="mt-2 text-sm text-gray-600 line-clamp-2">
             {task.description || "No description provided"}
           </div>
@@ -110,7 +120,7 @@ const TaskCard = ({ task }) => {
           {!isTaskActive ? (
             <button 
               onClick={handleStartTracking}
-              className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
+              className="bg-green-500 hover:bg-green-600 hover:text-white text-white px-3 py-1 rounded text-sm"
               disabled={task.status === 'Completed' || task.status === 'Cancelled'}
             >
               Start
@@ -118,7 +128,7 @@ const TaskCard = ({ task }) => {
           ) : (
             <button 
               onClick={handlePauseTracking}
-              className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
+              className="bg-yellow-500 hover:bg-yellow-600 hover:text-white text-white px-3 py-1 rounded text-sm"
             >
               Pause
             </button>
@@ -143,14 +153,12 @@ const TaskCard = ({ task }) => {
           </button>
           
           {showStatusDropdown && (
-            <div className="absolute left-0 mt-1 w-32 bg-white rounded-md shadow-lg py-1 z-10">
+            <div className="absolute left-0 mt-1 w-24 bg-white rounded-md shadow-lg py-1 z-10">
               {['Pending', 'In Progress', 'Completed', 'On Hold', 'Cancelled'].map((status) => (
                 <button 
                   key={status}
                   onClick={() => handleStatusChange(status)}
-                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
-                    task.status === status ? 'font-semibold' : ''
-                  }`}
+                  className="w-full bg-white text-blue-500 text-left text-xs px-2 py-1"
                 >
                   {status}
                 </button>
@@ -174,14 +182,12 @@ const TaskCard = ({ task }) => {
           </button>
           
           {showPriorityDropdown && (
-            <div className="absolute left-0 mt-1 w-32 bg-white rounded-md shadow-lg py-1 z-10">
+            <div className="absolute left-0 mt-1 w-24 bg-white rounded-md shadow-lg py-1 z-10">
               {['Low', 'Medium', 'High', 'Urgent'].map((priority) => (
                 <button 
                   key={priority}
                   onClick={() => handlePriorityChange(priority)}
-                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
-                    task.priority === priority ? 'font-semibold' : ''
-                  }`}
+                  className="w-full bg-white text-blue-500 text-left text-xs px-2 py-1"
                 >
                   {priority}
                 </button>
@@ -190,14 +196,6 @@ const TaskCard = ({ task }) => {
           )}
         </div>
       </div>
-      
-      {/* Active timer indicator */}
-      {isTaskActive && (
-        <div className="absolute top-2 right-2 flex items-center text-sm text-green-600">
-          <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></div>
-          Active
-        </div>
-      )}
     </div>
   );
 };

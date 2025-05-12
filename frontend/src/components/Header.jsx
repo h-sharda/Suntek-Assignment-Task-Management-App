@@ -67,7 +67,7 @@ const Header = () => {
                     </svg>
                   </button>
                   {showDropdown && (
-                    <div className="absolute right-0 mt-2 w-48 bg-overlay-white rounded-md shadow-lg py-1 z-10">
+                    <div className="absolute right-0 mt-2 w-28 bg-overlay-white rounded-md shadow-lg py-1 z-10">
                       <button 
                         onClick={() => {
                           setShowDropdown(false);
