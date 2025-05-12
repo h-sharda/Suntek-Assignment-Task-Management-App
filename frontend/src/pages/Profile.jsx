@@ -81,8 +81,8 @@ const Profile = () => {
       return toast.error('Passwords do not match');
     }
     
-    if (newPassword.length < 6) {
-      return toast.error('Password must be at least 6 characters');
+    if (newPassword.length < 4) {
+      return toast.error('Password must be at least 4 characters');
     }
     
     setLoading(true);
