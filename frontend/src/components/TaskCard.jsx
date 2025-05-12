@@ -93,7 +93,7 @@ const TaskCard = ({ task }) => {
       <div className="flex justify-between items-start">
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <Link to={`/tasks/${task._id}`} className="text-lg font-semibold hover:text-button">
+            <Link to={`/tasks/${task._id}`} className="text-lg font-semibold hover:text-blue-900 hover:underline">
               {task.title}
             </Link>
             
@@ -131,6 +131,13 @@ const TaskCard = ({ task }) => {
         
         {/* Time tracking buttons */}
         <div className={`flex gap-2 transition-opacity ${showActions ? 'opacity-100' : 'opacity-0'}`}>
+          <Link 
+            to={`/tasks/${task._id}`} 
+            className="bg-gray-500 hover:bg-gray-600 hover:text-white text-white px-3 py-1 rounded text-sm border border-transparent hover:border-blue-700"
+          >
+            View Task Details
+          </Link>
+
           {!isTaskActive ? (
             <button 
               onClick={handleStartTracking}
