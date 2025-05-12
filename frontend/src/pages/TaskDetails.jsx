@@ -90,7 +90,7 @@ const TaskDetails = () => {
     if (window.confirm('Are you sure you want to delete this task? This action cannot be undone.')) {
       try {
         await deleteTask(id);
-        navigate('/');
+        navigate(-1);
       } catch (error) {
         console.error('Error deleting task:', error);
       }
