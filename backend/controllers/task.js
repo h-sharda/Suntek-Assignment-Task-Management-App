@@ -357,6 +357,12 @@ exports.deleteTask = async (req, res) => {
       { new: true }
     );
 
+    // Remove task from daily summaries
+    await DailySummary.updateMany(
+      { user: req.user.id },
+      { $pull: { tasks: { task: task._id } } }
+    );
+
     // Delete the task
     await task.deleteOne();
 
