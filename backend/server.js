@@ -39,11 +39,11 @@ app.use("/api/time-logs", timeLogRoutes);
 app.use("/api/daily-summaries", dailySummaryRoutes);
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, "frontend/dist")));
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 // Rerouting all routes to the react frontend
 app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 // Error handling middleware
