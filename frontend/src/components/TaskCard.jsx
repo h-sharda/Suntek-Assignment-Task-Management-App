@@ -135,7 +135,7 @@ const TaskCard = ({ task }) => {
             to={`/tasks/${task._id}`} 
             className="bg-gray-500 hover:bg-gray-600 hover:text-white text-white px-3 py-1 rounded text-sm border border-transparent hover:border-blue-700"
           >
-            View Task Details
+            View Logs
           </Link>
 
           {!isTaskActive ? (
